@@ -26,14 +26,16 @@ public class Player extends Sprite {
             // only move one unit up if the player is at a position less than the screen height.
             getLocation().setY(getLocation().getY() + World.SPRITE_WIDTH);
         }
-        if (getLocation().getY() <= World.WATER_Y_END) {
             // collision detection for the water tiles, probably not the best solution, however I could
             // easily extend this by adding another condition that checks for bounding boxes of objects in the
             // next project, I'm assuming these are going to be the logs like the original frogger.
-            System.exit(0);
-        }
+
         // update the bounding box location
         setBB();
+    }
+    public void contactSprite(Obstacle other, int delta) {
+        // exit the game
+        getLocation().setX(getLocation().getX() + (other.getSpeed() * other.getDirection() * delta));
     }
 }
 

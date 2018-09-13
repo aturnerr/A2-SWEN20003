@@ -9,11 +9,18 @@ public class Sprite {
     private Point location;
     private Image image;
     private BoundingBox boundingBox;
+    private String type;
+    private boolean visible = true;
+    private long pastTime = 0;
 
-	public Sprite(String imageSrc, float x, float y) throws SlickException {
+	public Sprite(String type, float x, float y) throws SlickException {
 		// location point, image and bounding box for each sprite
+        if (type.equals("turtle")) {
+            type = "turtles";
+        }
+        this.type = type;
         location = new Point(x, y);
-        image = new Image(imageSrc);
+        image = new Image("assets/"+type+".png");
         boundingBox = new BoundingBox(image, location.getX(), location.getY());
 	}
 	
@@ -21,6 +28,7 @@ public class Sprite {
 		// update the location for the sprite
         location.setX(location.getX());
         location.setY(location.getY());
+
 	}
 
     public void setBB() {
@@ -39,13 +47,44 @@ public class Sprite {
 	    return boundingBox;
     }
 
+    public void turtleTimer(int delta) {
+        if (this.type.equals("turtles")) {
+            if (pastTime < 7 * 1000) {
+                pastTime += delta;
+                visible = true;
+            } else if (pastTime > 9 * 1000)  {
+                pastTime = 0;
+                visible = true;
+            }
+            else {
+                pastTime += delta;
+                visible = false;
+            }
+        }
+    }
+
+    public boolean isVisible() {
+	    return visible;
+    }
+
+    public String getType() {
+	    return type;
+    }
+
+    public float getWidth() {
+	    return image.getWidth();
+    }
+
 	public void render() {
 	    // draw the sprite
-	    image.draw(location.getX(), location.getY());
+        if (visible) {
+            image.drawCentered(location.getX(), location.getY());
+        }
+
 	}
 	
 	public void contactSprite(Sprite other) {
 		// exit the game
-        System.exit(0);
+
 	}
 }
