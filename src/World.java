@@ -2,24 +2,26 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import utilities.BoundingBox;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.nio.Buffer;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class World {
     // variables for tiles and player
 	private Image grass;
 	private Image water;
+	private Image life = new Image("assets/lives.png");;
     private Player playerSprite;
+    private Sprite extraLife;
+    Random rand;
     // arraylist to store each obstacle
     private ArrayList<Obstacle> obstacles = new ArrayList<>();
     private ArrayList<Sprite> tiles = new ArrayList<>();
+    private ArrayList<Hole> holes = new ArrayList<>();
     // constant variables
 	public static final int SPRITE_WIDTH = 48;
 	// speed of the buses, units per ms
@@ -34,17 +36,16 @@ public class World {
     public static final int ROW_1_Y_POSITION = 432, ROW_2_Y_POSITION = 480, ROW_3_Y_POSITION = 528, ROW_4_Y_POSITION = 576, ROW_5_Y_POSITION = 624;
     // array for the number of obstacles per row, increment 1 to account for index
     private int[] rowCount = new int[NUM_ROWS+1];
+    public static final int PLAYER_X_POSITION = 512;
+    public static final int PLAYER_Y_POSITION = 720;
+    private int lifeCount = 3;
 
 	public World() throws SlickException {
         // perform initialisation logic
 	    // player position constants
-	    final int PLAYER_X_POSITION = 512;
-        final int PLAYER_Y_POSITION = 720;
-        // set image sources
-		grass = new Image("assets/grass.png");
-		water = new Image("assets/water.png");
+
 		// create new instance of player sprite
-		playerSprite = new Player("frog", PLAYER_X_POSITION, PLAYER_Y_POSITION);
+
         // create new instances of obstacles
         /*createObstacleRow(ROW_1_OFFSET, ROW_1_SEPARATION, ROW_1_Y_POSITION, 0, "right");
         createObstacleRow(ROW_2_OFFSET, ROW_2_SEPARATION, ROW_2_Y_POSITION, 1, "left");
@@ -53,10 +54,17 @@ public class World {
         createObstacleRow(ROW_5_OFFSET, ROW_5_SEPARATION, ROW_5_Y_POSITION, 4, "right");*/
 
         int level = 0;
+        loadLevel(level);
+	}
 
+	public void loadLevel(int level) {
         try (BufferedReader br =
-             new BufferedReader(new FileReader("assets/levels/1.lvl"))) {
+                     new BufferedReader(new FileReader("assets/levels/" + level + ".lvl"))) {
             String text;
+            tiles.clear();
+            obstacles.clear();
+            holes.clear();
+            playerSprite = new Player("frog", PLAYER_X_POSITION, PLAYER_Y_POSITION);
             //text = br.readLine();
             while ((text = br.readLine()) != null) {
                 String[] values = text.split(",");
@@ -76,12 +84,23 @@ public class World {
                     obstacles.add(obstacle);
                 }
             }
+            rand = new Random();
+            Integer logIndex = rand.nextInt(obstacles.size());
+            Integer lifeTime = rand.nextInt(35 - 25 + 1) + 25;
+            System.out.println(lifeTime);
+            while(!(obstacles.get(logIndex).getType().equals("log") | obstacles.get(logIndex).getType().equals("longLog"))) {
+                logIndex = rand.nextInt(obstacles.size());
+            }
+            extraLife = new Sprite("extralife", obstacles.get(logIndex).getLocation().getX(), obstacles.get(logIndex).getLocation().getY());
+            for(int i=120; i < App.SCREEN_WIDTH; i += 192) {
+                Hole hole = new Hole("frog", i, 48);
+                holes.add(hole);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-	}
+    }
 	/*
 	public void createObstacleRow(int offset, double separation, int y, int rowNumber, String direction) throws SlickException {
 	    Obstacle bus;
@@ -104,6 +123,10 @@ public class World {
 		// update all of the sprites in the game
         // create an iterator object for the obstacles array list
         Iterator<Obstacle> itr = obstacles.iterator();
+        playerSprite.setMoveRight(true);
+        playerSprite.setMoveLeft(true);
+        playerSprite.setMoveUp(true);
+        playerSprite.setMoveDown(true);
         // loop through the list until at the end
         while(itr.hasNext()) {
             // create local object
@@ -113,7 +136,8 @@ public class World {
                     & (currentBus.getType().equals("bus")
                     | currentBus.getType().equals("racecar")
                     | currentBus.getType().equals("bike"))) {
-                System.exit(0);
+                playerSprite.resetPosition();
+                lifeCount --;
             }
             if (currentBus.getBB().intersects(playerSprite.getBB())
                     & (currentBus.getType().equals("bulldozer")
@@ -122,6 +146,23 @@ public class World {
                     | currentBus.getType().equals("turtles"))) {
                 // call the method in the sprite class
                 playerSprite.contactSprite(currentBus, delta);
+            }
+            BoundingBox bb;
+            if (currentBus.getBB().intersects(bb = new BoundingBox(playerSprite.getLocation().getX()+48, playerSprite.getLocation().getY(), SPRITE_WIDTH, SPRITE_WIDTH))
+                    & (currentBus.getType().equals("bulldozer"))) {
+                playerSprite.setMoveRight(false);
+            }
+            if (currentBus.getBB().intersects(bb = new BoundingBox(playerSprite.getLocation().getX()-48, playerSprite.getLocation().getY(), SPRITE_WIDTH, SPRITE_WIDTH))
+                    & (currentBus.getType().equals("bulldozer"))) {
+                playerSprite.setMoveLeft(false);
+            }
+            if (currentBus.getBB().intersects(bb = new BoundingBox(playerSprite.getLocation().getX(), playerSprite.getLocation().getY()-48, SPRITE_WIDTH, SPRITE_WIDTH))
+                    & (currentBus.getType().equals("bulldozer"))) {
+                playerSprite.setMoveUp(false);
+            }
+            if (currentBus.getBB().intersects(bb = new BoundingBox(playerSprite.getLocation().getX(), playerSprite.getLocation().getY()+48, SPRITE_WIDTH, SPRITE_WIDTH))
+                    & (currentBus.getType().equals("bulldozer"))) {
+                playerSprite.setMoveDown(false);
             }
             // call the update method for each instance
             currentBus.update(input, delta);
@@ -136,11 +177,30 @@ public class World {
                     }
                 }
                 if (!onLog) {
-                    System.exit(0);
+                    lifeCount--;
+                    playerSprite.resetPosition();
+                    break;
                 }
+            }
+            BoundingBox bb;
+            if (tiles.get(i).getBB().intersects(bb = new BoundingBox(playerSprite.getLocation().getX(), playerSprite.getLocation().getY()-48, SPRITE_WIDTH, SPRITE_WIDTH))
+                    & (tiles.get(i).getType().equals("tree"))) {
+                playerSprite.setMoveUp(false);
             }
 
         }
+        boolean levelComplete = true;
+        for (int i=0; i < holes.size(); i++) {
+            if (holes.get(i).getBB().intersects(playerSprite.getBB())) {
+                holes.get(i).setVisible(true);
+                playerSprite.resetPosition();
+            }
+            if (!holes.get(i).isVisible()) {
+                levelComplete = false;
+            }
+        }
+        if (levelComplete) loadLevel(1);                                           // NEED TO CHANGE
+        if (lifeCount == -1) System.exit(0);
         // call the update method for the player instance
         playerSprite.update(input, delta);
 	}
@@ -149,8 +209,11 @@ public class World {
 	    // draw the tiles
 	    drawTiles();
 	    drawObstacles();
+	    drawHoles();
+	    drawLives();
 		// draw the player
         playerSprite.render();
+        extraLife.render();
 		// draw each of the obstacles
 		/*for (int x = 0; x < NUM_ROWS; x++) {
             drawObstacleRow(x);
@@ -164,6 +227,16 @@ public class World {
     public void drawObstacles() {
         for (int i=0; i < obstacles.size(); i++) {
             obstacles.get(i).render();
+        }
+    }
+    public void drawHoles() {
+        for (int i=0; i < holes.size(); i++) {
+            holes.get(i).render();
+        }
+    }
+    public void drawLives() {
+	    for (int i=0; i < lifeCount; i++) {
+	        life.drawCentered((i+24) + (i*32), 744);        // REPLACE WITH STATIC VARIABLES
         }
     }
 	/*

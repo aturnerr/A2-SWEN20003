@@ -23,13 +23,13 @@ public class Obstacle extends Sprite {
     public void update(Input input, int delta) {
         if (travelsRight) {
             // if the sprite goes off screen
-            if (getLocation().getX() > App.SCREEN_WIDTH + this.getWidth()/2) {
-                getLocation().setX(-World.SPRITE_WIDTH - this.getWidth() / 2);
+            if (getLocation().getX() > App.SCREEN_WIDTH + this.getWidth() / 2) {
+                getLocation().setX(-this.getWidth()/2);
             }
             getLocation().setX(getLocation().getX() + (speed*delta));
         } else {
             // repeat for the opposite direction
-            if (getLocation().getX() < -World.SPRITE_WIDTH - this.getWidth()/2) {
+            if (getLocation().getX() < -this.getWidth()/2) {
                 // set the location to the opposite side
                 getLocation().setX(App.SCREEN_WIDTH + this.getWidth() / 2);
             }

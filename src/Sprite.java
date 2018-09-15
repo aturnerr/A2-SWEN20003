@@ -32,8 +32,8 @@ public class Sprite {
 	}
 
     public void setBB() {
-	    // update the bounding box location
-	    boundingBox.setX(location.getX());
+        // update the bounding box location
+        boundingBox.setX(location.getX());
         boundingBox.setY(location.getY());
     }
 
@@ -63,8 +63,25 @@ public class Sprite {
         }
     }
 
+    public void lifeTimer(int delta, int time) {
+        if (this.type.equals("turtles")) {
+            if (pastTime < time * 1000) {
+                pastTime += delta;
+                visible = false;
+            }
+            else {
+                pastTime = 0;
+                visible = true;
+            }
+        }
+    }
+
     public boolean isVisible() {
 	    return visible;
+    }
+
+    public void setVisible(Boolean isVisible) {
+	    visible = isVisible;
     }
 
     public String getType() {
