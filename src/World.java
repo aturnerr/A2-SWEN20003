@@ -12,33 +12,21 @@ import java.util.*;
 
 public class World {
     // variables for tiles and player
-	private Image grass;
-	private Image water;
 	private Image life = new Image("assets/lives.png");;
     private Player playerSprite;
     private Sprite extraLife;
-    Random rand;
-    // arraylist to store each obstacle
+    private Random rand;
+    // arrayList to store obstacles, tiles and holes at top of screen
     private ArrayList<Obstacle> obstacles = new ArrayList<>();
     private ArrayList<Sprite> tiles = new ArrayList<>();
     private ArrayList<Hole> holes = new ArrayList<>();
     // constant variables
 	public static final int SPRITE_WIDTH = 48;
-	// speed of the buses, units per ms
-	public static final float OBSTACLE_SPEED = 0.15f;
-	// number of obstacle rows
-    public static final int NUM_ROWS = 5;
-    // tile constants
-    public static final int WATER_Y_START = 48, WATER_Y_END = 336, GRASS_ROW_1= 384, GRASS_ROW_2 = 672;
-    // obstacle constants
-    public static final int ROW_1_OFFSET = 48, ROW_2_OFFSET = 0, ROW_3_OFFSET = 64, ROW_4_OFFSET = 128, ROW_5_OFFSET = 250;
-    public static final float ROW_1_SEPARATION = 6.5f, ROW_2_SEPARATION = 5, ROW_3_SEPARATION = 12, ROW_4_SEPARATION = 5, ROW_5_SEPARATION = 6.5f;
-    public static final int ROW_1_Y_POSITION = 432, ROW_2_Y_POSITION = 480, ROW_3_Y_POSITION = 528, ROW_4_Y_POSITION = 576, ROW_5_Y_POSITION = 624;
-    // array for the number of obstacles per row, increment 1 to account for index
-    private int[] rowCount = new int[NUM_ROWS+1];
     public static final int PLAYER_X_POSITION = 512;
     public static final int PLAYER_Y_POSITION = 720;
     private int lifeCount = 3;
+    private int extraLifeTime;
+    private long pastTime = 0;
 
 	public World() throws SlickException {
         // perform initialisation logic
@@ -54,6 +42,8 @@ public class World {
         createObstacleRow(ROW_5_OFFSET, ROW_5_SEPARATION, ROW_5_Y_POSITION, 4, "right");*/
 
         int level = 0;
+        rand = new Random();
+        extraLifeTime = rand.nextInt(35 - 25 + 1) + 25;
         loadLevel(level);
 	}
 
@@ -84,14 +74,12 @@ public class World {
                     obstacles.add(obstacle);
                 }
             }
-            rand = new Random();
-            Integer logIndex = rand.nextInt(obstacles.size());
-            Integer lifeTime = rand.nextInt(35 - 25 + 1) + 25;
-            System.out.println(lifeTime);
-            while(!(obstacles.get(logIndex).getType().equals("log") | obstacles.get(logIndex).getType().equals("longLog"))) {
-                logIndex = rand.nextInt(obstacles.size());
-            }
-            extraLife = new Sprite("extralife", obstacles.get(logIndex).getLocation().getX(), obstacles.get(logIndex).getLocation().getY());
+
+
+            System.out.println(extraLifeTime);
+            //int logIndex = getRandomLog();
+            //extraLife = new ExtraLife("extralife", obstacles.get(logIndex).getLocation().getX(), obstacles.get(logIndex).getLocation().getY(), extraLifeTime, obstacles.get(logIndex));
+
             for(int i=120; i < App.SCREEN_WIDTH; i += 192) {
                 Hole hole = new Hole("frog", i, 48);
                 holes.add(hole);
@@ -100,6 +88,19 @@ public class World {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public int getRandomLog() {
+        rand = new Random();
+        int logIndex = rand.nextInt(obstacles.size());
+        while(!(obstacles.get(logIndex).getType().equals("log") | obstacles.get(logIndex).getType().equals("longLog"))) {
+            logIndex = rand.nextInt(obstacles.size());
+        }
+        return logIndex;
+    }
+
+    public void newExtraLife() throws SlickException {
+        int logIndex = getRandomLog();
+        extraLife = new ExtraLife("extralife", obstacles.get(logIndex).getLocation().getX(), obstacles.get(logIndex).getLocation().getY(), obstacles.get(logIndex));
     }
 	/*
 	public void createObstacleRow(int offset, double separation, int y, int rowNumber, String direction) throws SlickException {
@@ -117,7 +118,7 @@ public class World {
         rowCount[rowNumber+1] = rowCount[rowNumber];
     }*/
 	
-	public void update(Input input, int delta) {
+	public void update(Input input, int delta) throws SlickException {
 	    // idea for the iterator/arraylist sourced from http://slick.ninjacave.com/forum/viewtopic.php?f=3&t=7064
 
 		// update all of the sprites in the game
@@ -199,10 +200,27 @@ public class World {
                 levelComplete = false;
             }
         }
+        if (extraLife != null) {
+            if (playerSprite.getBB().intersects(extraLife.getBB()) & extraLife.isVisible()) {
+                extraLife.setVisible(false);
+                lifeCount++;
+            }
+        }
+
+
+        if (pastTime < extraLifeTime * 1000) {
+            pastTime += delta;
+        } else {
+            pastTime = 0;
+            System.out.println("new extra life spawned!");
+            newExtraLife();
+        }
+
         if (levelComplete) loadLevel(1);                                           // NEED TO CHANGE
         if (lifeCount == -1) System.exit(0);
         // call the update method for the player instance
         playerSprite.update(input, delta);
+        if (extraLife != null) extraLife.update(input, delta);
 	}
 	
 	public void render(Graphics g) {
@@ -213,7 +231,7 @@ public class World {
 	    drawLives();
 		// draw the player
         playerSprite.render();
-        extraLife.render();
+        if (extraLife != null) extraLife.render();
 		// draw each of the obstacles
 		/*for (int x = 0; x < NUM_ROWS; x++) {
             drawObstacleRow(x);
@@ -255,7 +273,7 @@ public class World {
         }
     }*/
 
-	public void drawObstacleRow(int rowNumber) {
+	/*public void drawObstacleRow(int rowNumber) {
 	    // draws each of the obstacles supplied by the array list
 	    if (rowNumber==0) {
 	        // if this is the first row, start at index 0
@@ -268,5 +286,5 @@ public class World {
                 obstacles.get(x).render();
             }
         }
-    }
+    }*/
 }

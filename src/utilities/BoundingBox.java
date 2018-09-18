@@ -26,12 +26,6 @@ public class BoundingBox {
 		setX(x);
 		setY(y);
 	}
-	public BoundingBox(BoundingBox bb) {
-		width = bb.width;
-		height = bb.height;
-		left = bb.left;
-		top = bb.top;
-	}
 
 	/*
 	 * Sets the x and y position at the centre of the bounding box.

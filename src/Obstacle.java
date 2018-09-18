@@ -40,7 +40,9 @@ public class Obstacle extends Sprite {
                 travelsRight = !travelsRight;
             }
         }
-        turtleTimer(delta);
+        if (this.type.equals("turtle")) {
+            turtleTimer(delta);
+        }
         // update the bounding box location
         setBB();
     }

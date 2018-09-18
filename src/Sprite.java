@@ -48,7 +48,6 @@ public class Sprite {
     }
 
     public void turtleTimer(int delta) {
-        if (this.type.equals("turtles")) {
             if (pastTime < 7 * 1000) {
                 pastTime += delta;
                 visible = true;
@@ -60,21 +59,9 @@ public class Sprite {
                 pastTime += delta;
                 visible = false;
             }
-        }
     }
 
-    public void lifeTimer(int delta, int time) {
-        if (this.type.equals("turtles")) {
-            if (pastTime < time * 1000) {
-                pastTime += delta;
-                visible = false;
-            }
-            else {
-                pastTime = 0;
-                visible = true;
-            }
-        }
-    }
+
 
     public boolean isVisible() {
 	    return visible;
