@@ -26,20 +26,36 @@ public class World {
     private ArrayList<Hole> holes = new ArrayList<>();
     // constant variables
 	public static final int SPRITE_WIDTH = 48;
+    public static final int TO_MILLISECONDS = 1000;
+
     public static final int PLAYER_X_POSITION = 512;
     public static final int PLAYER_Y_POSITION = 720;
+
     public static final int EXTRALIFE_TIME_MAX = 35;
     public static final int EXTRALIFE_TIME_MIN = 25;
     public static final int EXTRALIFE_MOVE_OFFSET = 2;
     public static final int EXTRALIFE_MAX_LIFETIME = 14;
+
     public static final int NUM_TILE_ARGUMENTS = 3;
     public static final int NUM_OBSTACLE_ARGUMENTS = 4;
+
     public static final int HOLE_OFFSET = 120;
     public static final int HOLE_SEPARATION = 192;
-    public static final int TO_MILLISECONDS = 1000;
+
+    public static final int TURTLE_VISIBLE_TIME = 7;
+    public static final int TURTLE_UNDERWATER_TIME = 2;
+
     public static final int LIVES_XPOS = 24;
     public static final int LIVES_YPOS = 744;
     public static final int LIVES_SEPARATION = 32;
+
+    public static final float BUS_SPEED = 0.15f;
+    public static final float RACECAR_SPEED = 0.5f;
+    public static final float BIKE_SPEED = 0.2f;
+    public static final float BULLDOZER_SPEED = 0.05f;
+    public static final float LOG_SPEED = 0.1f;
+    public static final float LONGLOG_SPEED = 0.07f;
+    public static final float TURTLE_SPEED = 0.085f;
     // other variables
     private int lifeCount = 3;
     private int extraLifeTime;

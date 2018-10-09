@@ -25,13 +25,13 @@ public class Obstacle extends Sprite {
         super(type, x, y);
         this.type = type;
         this.travelsRight = travelsRight;
-        if (type.equals("bus")) speed = 0.15f;
-        if (type.equals("racecar")) speed = 0.5f;
-        if (type.equals("bike")) speed = 0.2f;
-        if (type.equals("bulldozer")) speed = 0.05f;
-        if (type.equals("log")) speed = 0.1f;
-        if (type.equals("longLog")) speed = 0.07f;
-        if (type.equals("turtle")) speed = 0.085f;
+        if (type.equals("bus")) speed = World.BUS_SPEED;
+        if (type.equals("racecar")) speed = World.RACECAR_SPEED;
+        if (type.equals("bike")) speed = World.BIKE_SPEED;
+        if (type.equals("bulldozer")) speed = World.BULLDOZER_SPEED;
+        if (type.equals("log")) speed = World.LOG_SPEED;
+        if (type.equals("longLog")) speed = World.LONGLOG_SPEED;
+        if (type.equals("turtle")) speed = World.TURTLE_SPEED;
     }
 
     /**
@@ -56,7 +56,7 @@ public class Obstacle extends Sprite {
         }
         // specific behaviour for bike
         if (type.equals("bike")) {
-            if (getLocation().getX() < 24 | getLocation().getX() > 1000) {
+            if (getLocation().getX() < World.SPRITE_WIDTH/2 | getLocation().getX() > World.TO_MILLISECONDS) {
                 travelsRight = !travelsRight;
             }
         }

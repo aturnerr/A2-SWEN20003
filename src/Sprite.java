@@ -73,13 +73,13 @@ public class Sprite {
 
     /**
      * Determine timing for turtles
-     * @param delta
+     * @param delta time
      */
     public void turtleTimer(int delta) {
-            if (pastTime < 7 * 1000) {
+            if (pastTime < World.TURTLE_VISIBLE_TIME * 1000) {
                 pastTime += delta;
                 visible = true;
-            } else if (pastTime > 9 * 1000)  {
+            } else if (pastTime > (World.TURTLE_VISIBLE_TIME + World.TURTLE_UNDERWATER_TIME) * 1000)  {
                 pastTime = 0;
                 visible = true;
             }
