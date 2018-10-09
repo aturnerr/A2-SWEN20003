@@ -3,12 +3,13 @@
  * by Eleanor McMurtry, University of Melbourne
  */
 package utilities;
-
 import org.newdawn.slick.Image;
 
+/**
+ *  Methods for setting and returning bounding boxes for sprites within the game
+ */
 public class BoundingBox {
 	private static final float FUZZ = 0.95f;
-	
 	private float left;
 	private float top;
 	private float width;
@@ -64,6 +65,11 @@ public class BoundingBox {
 		return height;
 	}
 
+    /**
+     * Check if the bounding boxes intersect
+     * @param other
+     * @return
+     */
 	public boolean intersects(BoundingBox other) {
 		return !(other.left > getRight()
 			  || other.getRight()  < left

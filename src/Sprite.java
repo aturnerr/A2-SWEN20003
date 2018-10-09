@@ -4,6 +4,12 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Point;
 import utilities.BoundingBox;
 
+/**
+ * Sprite class controls behaviour of all sprite types within the game
+ *
+ * @author Adam Turner 910935
+ *
+ */
 public class Sprite {
     // initialise variables
     private Point location;
@@ -13,8 +19,14 @@ public class Sprite {
     private boolean visible = true;
     private long pastTime = 0;
 
+    /**
+     * Set the location point, image and bounding box for each sprite
+     * @param type
+     * @param x
+     * @param y
+     * @throws SlickException
+     */
 	public Sprite(String type, float x, float y) throws SlickException {
-		// location point, image and bounding box for each sprite
         if (type.equals("turtle")) {
             type = "turtles";
         }
@@ -23,30 +35,46 @@ public class Sprite {
         image = new Image("assets/"+type+".png");
         boundingBox = new BoundingBox(image, location.getX(), location.getY());
 	}
-	
+
+    /**
+     * Update the location for the sprite
+     * @param input
+     * @param delta
+     */
 	public void update(Input input, int delta) {
-		// update the location for the sprite
         location.setX(location.getX());
         location.setY(location.getY());
 
 	}
 
+    /**
+     * Update the bounding box location
+     */
     public void setBB() {
-        // update the bounding box location
         boundingBox.setX(location.getX());
         boundingBox.setY(location.getY());
     }
 
+    /**
+     * Return the current location of the sprite
+     * @return location
+     */
     public Point getLocation() {
-	    // return the current location of the sprite
 	    return location;
     }
 
+    /**
+     * Return the current location of the bounding box
+     * @return boundingBox
+     */
     public BoundingBox getBB() {
-	    // return the current location of the bounding box
 	    return boundingBox;
     }
 
+    /**
+     * Determine timing for turtles
+     * @param delta
+     */
     public void turtleTimer(int delta) {
             if (pastTime < 7 * 1000) {
                 pastTime += delta;
@@ -61,34 +89,45 @@ public class Sprite {
             }
     }
 
-
-
+    /**
+     * Check if the sprite is currently visible
+     * @return visible
+     */
     public boolean isVisible() {
 	    return visible;
     }
 
+    /**
+     * Set the visibility of the sprite
+     * @param isVisible
+     */
     public void setVisible(Boolean isVisible) {
 	    visible = isVisible;
     }
 
+    /**
+     * Get the type of the sprite
+     * @return type
+     */
     public String getType() {
 	    return type;
     }
 
+    /**
+     * Get the width of the sprite image
+     * @return image width
+     */
     public float getWidth() {
 	    return image.getWidth();
     }
 
+    /**
+     * Draw the sprite
+     */
 	public void render() {
-	    // draw the sprite
+
         if (visible) {
             image.drawCentered(location.getX(), location.getY());
         }
-
-	}
-	
-	public void contactSprite(Sprite other) {
-		// exit the game
-
 	}
 }

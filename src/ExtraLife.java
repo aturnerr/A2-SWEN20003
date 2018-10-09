@@ -2,22 +2,39 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import utilities.BoundingBox;
 
+/**
+ * ExtraLife class controls behaviour of the extralife object within the game
+ *
+ * @author Adam Turner 910935
+ *
+ */
 public class ExtraLife extends Sprite {
 
-    private long pastTime = 1;
     private long timeSinceLastMove = 0;
     private long timeSinceSpawned = 0;
     private Obstacle log;
     private boolean moveRight = true;
 
+    /**
+     * Default constructor, set the log which the object is attached to
+     * @param type
+     * @param x
+     * @param y
+     * @param log
+     * @throws SlickException
+     */
     public ExtraLife(String type, float x, float y, Obstacle log) throws SlickException {
         super(type, x, y);
         this.log = log;
     }
 
+    /**
+     * Update the visibility and movement of the object
+     * @param input
+     * @param delta
+     */
     public void update(Input input, int delta) {
-        //lifeTimer(delta, timeToAppear);
-
+        // check if the life object is off the screen
         if (log.getDirection() == 1) {
             if (getLocation().getX() > App.SCREEN_WIDTH + log.getWidth() / 2) {
                 getLocation().setX(-log.getWidth()/2);
@@ -32,8 +49,9 @@ public class ExtraLife extends Sprite {
         }
         setBB();
 
+        // move the life left and right along log
         if (isVisible()) {
-            if (timeSinceLastMove < 2 * 1000) {
+            if (timeSinceLastMove < World.EXTRALIFE_MOVE_OFFSET * World.TO_MILLISECONDS) {
                 timeSinceLastMove += delta;
             } else {
                 timeSinceLastMove = 0;
@@ -48,8 +66,8 @@ public class ExtraLife extends Sprite {
                     moveRight = true;
                 }
             }
-
-            if (timeSinceSpawned < (14) * 1000) {
+            // disappear after specified amount of time
+            if (timeSinceSpawned < (World.EXTRALIFE_MAX_LIFETIME) * World.TO_MILLISECONDS) {
                 timeSinceSpawned += delta;
             } else {
                 setVisible(false);
@@ -59,36 +77,29 @@ public class ExtraLife extends Sprite {
 
     }
 
-    public void setLog(Obstacle log) {
-        this.log = log;
-    }
-
+    /**
+     * Check if the life object can move right
+     * @return
+     */
     public boolean canMoveRight() {
         BoundingBox bb;
-        if (log.getBB().intersects(bb = new BoundingBox(getLocation().getX()+48, getLocation().getY(), World.SPRITE_WIDTH, World.SPRITE_WIDTH))) {
+        if (log.getBB().intersects(bb = new BoundingBox(getLocation().getX()+World.SPRITE_WIDTH, getLocation().getY(), World.SPRITE_WIDTH, World.SPRITE_WIDTH))) {
             return true;
         } else {
             return false;
         }
     }
 
+    /**
+     * Check if the life object can move left
+     * @return
+     */
     public boolean canMoveLeft() {
         BoundingBox bb;
-        if (log.getBB().intersects(bb = new BoundingBox(getLocation().getX()-48, getLocation().getY(), World.SPRITE_WIDTH, World.SPRITE_WIDTH))) {
+        if (log.getBB().intersects(bb = new BoundingBox(getLocation().getX()-World.SPRITE_WIDTH, getLocation().getY(), World.SPRITE_WIDTH, World.SPRITE_WIDTH))) {
             return true;
         } else {
             return false;
-        }
-    }
-
-    public void lifeTimer(int delta, int time) {
-        if (pastTime < time * 1000) {
-            pastTime += delta;
-            this.setVisible(false);
-        }
-        else {
-            //pastTime = 0;
-            this.setVisible(true);
         }
     }
 }
