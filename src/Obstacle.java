@@ -15,11 +15,11 @@ public class Obstacle extends Sprite {
 
     /**
      * Default constructor, with the addition of a direction string for the obstacles
-     * @param type
-     * @param x
-     * @param y
-     * @param travelsRight
-     * @throws SlickException
+     * @param type type of sprite
+     * @param x position
+     * @param y position
+     * @param travelsRight movement direction
+     * @throws SlickException ignore slick exception
      */
     public Obstacle(String type, float x, float y, Boolean travelsRight) throws SlickException {
         super(type, x, y);

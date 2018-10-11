@@ -76,17 +76,20 @@ public class Sprite {
      * @param delta time
      */
     public void turtleTimer(int delta) {
-            if (pastTime < World.TURTLE_VISIBLE_TIME * 1000) {
-                pastTime += delta;
-                visible = true;
-            } else if (pastTime > (World.TURTLE_VISIBLE_TIME + World.TURTLE_UNDERWATER_TIME) * 1000)  {
-                pastTime = 0;
-                visible = true;
-            }
-            else {
-                pastTime += delta;
-                visible = false;
-            }
+        if (pastTime < World.TURTLE_VISIBLE_TIME * 1000) {
+            // visible if timer is less than 7 seconds
+            pastTime += delta;
+            visible = true;
+        } else if (pastTime > (World.TURTLE_VISIBLE_TIME + World.TURTLE_UNDERWATER_TIME) * 1000)  {
+            // if counter is greater than the 7 second delay and 2 second dive, reset the timer
+            pastTime = 0;
+            visible = true;
+        }
+        else {
+            // invisible
+            pastTime += delta;
+            visible = false;
+        }
     }
 
     /**
