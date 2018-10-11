@@ -17,11 +17,11 @@ public class ExtraLife extends Sprite {
 
     /**
      * Default constructor, set the log which the object is attached to
-     * @param type
-     * @param x
-     * @param y
-     * @param log
-     * @throws SlickException
+     * @param type type of sprite
+     * @param x position
+     * @param y position
+     * @param log assigned log
+     * @throws SlickException ignore slick exception
      */
     public ExtraLife(String type, float x, float y, Obstacle log) throws SlickException {
         super(type, x, y);
@@ -30,8 +30,8 @@ public class ExtraLife extends Sprite {
 
     /**
      * Update the visibility and movement of the object
-     * @param input
-     * @param delta
+     * @param input controller
+     * @param delta time
      */
     public void update(Input input, int delta) {
         // check if the life object is off the screen
@@ -79,7 +79,7 @@ public class ExtraLife extends Sprite {
 
     /**
      * Check if the life object can move right
-     * @return
+     * @return if it can move right
      */
     public boolean canMoveRight() {
         BoundingBox bb;
@@ -92,7 +92,7 @@ public class ExtraLife extends Sprite {
 
     /**
      * Check if the life object can move left
-     * @return
+     * @return if it can move left
      */
     public boolean canMoveLeft() {
         BoundingBox bb;

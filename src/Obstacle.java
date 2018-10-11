@@ -36,8 +36,8 @@ public class Obstacle extends Sprite {
 
     /**
      * Update the position, location and visibility of specific types of sprites
-     * @param input
-     * @param delta
+     * @param input controller
+     * @param delta time
      */
     public void update(Input input, int delta) {
         if (travelsRight) {
@@ -70,7 +70,7 @@ public class Obstacle extends Sprite {
 
     /**
      * Get the speed of the obstacle
-     * @return
+     * @return speed
      */
     public float getSpeed() {
         return speed;
@@ -78,7 +78,7 @@ public class Obstacle extends Sprite {
 
     /**
      * Get the current motion direction of the obstacle
-     * @return
+     * @return direction
      */
     public int getDirection() {
         if (travelsRight) {

@@ -17,9 +17,9 @@ public class Player extends Sprite {
 
     /**
      * Default constructor
-     * @param type
-     * @param x
-     * @param y
+     * @param type type of sprite
+     * @param x position
+     * @param y position
      * @throws SlickException
      */
     public Player(String type, float x, float y) throws SlickException {
@@ -28,8 +28,8 @@ public class Player extends Sprite {
 
     /**
      * Accept keyboard input values and update location of Player
-     * @param input
-     * @param delta
+     * @param input controller
+     * @param delta time
      */
     public void update(Input input, int delta) {
         if (input.isKeyPressed(Input.KEY_LEFT) & getLocation().getX() >= World.SPRITE_WIDTH & canMoveLeft) {
@@ -54,8 +54,8 @@ public class Player extends Sprite {
 
     /**
      * If player comes in contact with obstacle, move along with it
-     * @param other
-     * @param delta
+     * @param other collision object
+     * @param delta time
      */
     public void contactSprite(Obstacle other, int delta) {
         getLocation().setX(getLocation().getX() + (other.getSpeed() * other.getDirection() * delta));
@@ -63,7 +63,7 @@ public class Player extends Sprite {
 
     /**
      * Set movement for each direction
-     * @param move
+     * @param move boolean
      */
     public void setMoveLeft(Boolean move) {
         canMoveLeft = move;

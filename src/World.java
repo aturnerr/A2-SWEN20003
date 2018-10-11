@@ -9,7 +9,7 @@ import java.nio.Buffer;
 import java.util.*;
 
 /**
- * World class in charge of directing each of the game elements and their interactions
+ * World class directs each of the game elements and their interactions
  *
  * @author Adam Turner 910935
  *
@@ -64,12 +64,12 @@ public class World {
 
     /**
      * Perform initialisation logic
-     * @throws SlickException
+     * @throws SlickException ignore slick exception
      */
 	public World() throws SlickException {
         // create new random object
         rand = new Random();
-        // determine extralife time
+        // determine extra life time
         extraLifeTime = rand.nextInt(EXTRALIFE_TIME_MAX - EXTRALIFE_TIME_MIN + 1) + EXTRALIFE_TIME_MIN;
         // load the first level
         loadLevel(currentLevel);
@@ -77,7 +77,7 @@ public class World {
 
     /**
      * Loads level with the given index
-     * @param level
+     * @param level the level number to load
      */
 	public void loadLevel(int level) {
 	    // try to read the .lvl file
@@ -143,8 +143,8 @@ public class World {
 
     /**
      * Update all of the sprites in the game
-     * @param input
-     * @param delta
+     * @param input controller
+     * @param delta time
      * @throws SlickException
      */
 	public void update(Input input, int delta) throws SlickException {

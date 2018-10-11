@@ -9,10 +9,10 @@ import org.newdawn.slick.SlickException;
 public class Hole extends Sprite {
     /**
      * Default constructor, set initial visibility
-     * @param type
-     * @param x
-     * @param y
-     * @throws SlickException
+     * @param type type of sprite
+     * @param x position
+     * @param y position
+     * @throws SlickException ignore slick exception
      */
     public Hole(String type, float x, float y) throws SlickException {
         super(type, x, y);

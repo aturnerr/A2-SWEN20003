@@ -21,10 +21,10 @@ public class Sprite {
 
     /**
      * Set the location point, image and bounding box for each sprite
-     * @param type
-     * @param x
-     * @param y
-     * @throws SlickException
+     * @param type type of sprite
+     * @param x position
+     * @param y position
+     * @throws SlickException ignore slick exception
      */
 	public Sprite(String type, float x, float y) throws SlickException {
         if (type.equals("turtle")) {
@@ -38,8 +38,8 @@ public class Sprite {
 
     /**
      * Update the location for the sprite
-     * @param input
-     * @param delta
+     * @param input controller
+     * @param delta time
      */
 	public void update(Input input, int delta) {
         location.setX(location.getX());

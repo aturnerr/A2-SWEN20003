@@ -68,7 +68,7 @@ public class BoundingBox {
     /**
      * Check if the bounding boxes intersect
      * @param other
-     * @return
+     * @return if collision
      */
 	public boolean intersects(BoundingBox other) {
 		return !(other.left > getRight()
